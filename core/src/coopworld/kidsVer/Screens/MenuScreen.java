@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import coopworld.kidsVer.CooperativeGame;
 import coopworld.kidsVer.Logs.GameData;
 import coopworld.kidsVer.Logs.LevelData;
+import coopworld.kidsVer.Logs.User;
 import coopworld.kidsVer.Networking.Connection;
 
 
@@ -97,5 +98,11 @@ public class MenuScreen implements Screen {
         levelData.setTablet_id("-1");
         // send the object to the server.
         connection.sendLevelData(levelData);
+
+        User user = new User();
+        user.setAge("5");
+        user.setApk_version("1.1");
+        user.setName("Avi");
+        connection.sendUserData(user);
     }
 }

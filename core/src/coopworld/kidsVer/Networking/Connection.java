@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import coopworld.kidsVer.Logs.GameData;
 import coopworld.kidsVer.Logs.LevelData;
+import coopworld.kidsVer.Logs.User;
 
 import static com.badlogic.gdx.net.HttpRequestHeader.ContentType;
 
@@ -26,6 +27,7 @@ public class Connection {
     protected String port;
     protected String urlLevelData;
     protected String urlGameData;
+    protected String urlUser;
     protected Socket client;
     protected SocketHints hints;
     protected boolean socketConnected;
@@ -83,8 +85,12 @@ public class Connection {
         sendPostRequest(makeString(levelData), this.urlLevelData);
     }
 
+    public void sendUserData(User user){
+        sendPostRequest(makeString(user), this.urlUser);
+    }
+
     public void sendPostRequest(final String jsonStr, String url) {
-        if(socketConnected){
+        if(socketConnected) {
             try {
                 Net.HttpRequest httpPost = new Net.HttpRequest(Net.HttpMethods.POST);
                 httpPost.setUrl(url);
