@@ -104,5 +104,5 @@ public class MenuScreen implements Screen {
         user.setApk_version("1.1");
         user.setName("Avi");
         connection.sendUserData(user);
-    }
+        }
 }
