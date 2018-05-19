@@ -87,7 +87,7 @@ public class MenuScreen implements Screen {
 
         // create gameData object.
         GameData gameData = new GameData();
-        gameData.setUser_id("12341");
+        gameData.setUser_id("test");
         gameData.setTablet_id("-1");
         // send the object to the server.
         connection.sendGameData(gameData);

@@ -99,7 +99,7 @@ public class Connection {
                     String str = httpResponse.getResultAsString();
                     JsonReader json = new JsonReader();
                     JsonValue val = json.parse(str);
-                    secret = val.getString("secret").toString();
+                    secret = val.getString("token").toString();
                 } else {
                     Gdx.app.log("PutUserService",
                             "update user name services return code: "
@@ -137,7 +137,7 @@ public class Connection {
                 httpPost.setUrl(url);
                 httpPost.setContent(jsonStr);
                 httpPost.setHeader(ContentType, "application/json; charset=utf-8");
-                httpPost.setHeader("secret", this.secret);
+                httpPost.setHeader("auth_user_token", this.secret);
                 Gdx.net.sendHttpRequest(httpPost, new Net.HttpResponseListener() {
                     public void handleHttpResponse(Net.HttpResponse httpResponse) {
                         HttpStatus status = httpResponse.getStatus();
