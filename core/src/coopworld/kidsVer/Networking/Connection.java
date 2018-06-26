@@ -19,6 +19,7 @@ import coopworld.kidsVer.Logs.LevelData;
 import coopworld.kidsVer.Logs.User;
 
 import static com.badlogic.gdx.net.HttpRequestHeader.ContentType;
+import static com.badlogic.gdx.net.HttpRequestHeader.Pragma;
 
 
 /**
@@ -31,10 +32,12 @@ public class Connection {
     protected String urlGameData;
     protected String urlUser;
     protected Socket client;
+    protected String urlGameConfig;
     protected String urlToken;
     protected SocketHints hints;
     protected boolean socketConnected;
     protected String secret;
+    protected JsonValue gameConfig;
 
     /*
     read configuration file to get ip, port and urls.
@@ -50,6 +53,7 @@ public class Connection {
         this.urlGameData = lines[3];
         this.urlUser = lines[4];
         this.urlToken = lines[5];
+        this.urlGameConfig = lines[6];
     }
 
     /*
@@ -62,7 +66,21 @@ public class Connection {
             //this.client = Gdx.net.newClientSocket(Net.Protocol.TCP, this.ip,
             //        Integer.parseInt(this.port), this.hints);
             getConnectionTokken();
-            this.socketConnected = true;
+            int tries = 100;
+            while (true) {
+                if(this.secret != null) {
+                    this.socketConnected = true;
+                    break;
+                }
+                tries--;
+                if (tries >= 0) {
+                    Thread.sleep(250);
+                } else {
+                    this.socketConnected = false;
+                    Gdx.app.log("Connection", "Failed to connected to remote server");
+                    break;
+                }
+            }
         } catch (final Exception e) {
             e.printStackTrace();
         }
@@ -78,10 +96,12 @@ public class Connection {
         json.setUsePrototypes(false);
         // important for valid json!
         json.setOutputType(JsonWriter.OutputType.json);
+
         // the string jsonStr represents the GameData object in a json format.
         String jsonStr = json.toJson(before);
         return jsonStr;
     }
+
 
     public void getConnectionTokken() {
         Net.HttpRequest httpPost = new Net.HttpRequest(Net.HttpMethods.GET);
@@ -171,5 +191,44 @@ public class Connection {
 
     public boolean isSocketConnected() {
         return socketConnected;
+    }
+
+    public void getConfig(Integer id) {
+        if(socketConnected) {
+            try {
+                Net.HttpRequest httpPost = new Net.HttpRequest(Net.HttpMethods.GET);
+                httpPost.setUrl(this.urlGameConfig);
+                httpPost.setContent("id=" + id);
+                httpPost.setHeader(ContentType, "application/json; charset=utf-8");
+                httpPost.setHeader("auth_user_token", this.secret);
+                Gdx.net.sendHttpRequest(httpPost, new Net.HttpResponseListener() {
+                    public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                        HttpStatus status = httpResponse.getStatus();
+                        if (status.getStatusCode() == HttpStatus.SC_OK
+                                || status.getStatusCode() == HttpStatus.SC_NO_CONTENT) {
+                            Gdx.app.log("PutUserService",
+                                    " successful with code:" + status.getStatusCode());
+                            String response = httpResponse.getResultAsString();
+                            gameConfig = new JsonReader().parse(response);
+                        } else {
+                            Gdx.app.log("PutUserService",
+                                    "Failed getting a game config: "
+                                            + String.valueOf(status.getStatusCode()));
+                        }
+                    }
+
+                    public void failed(Throwable t) {
+                        String status = "failed";
+                    }
+
+                    @Override
+                    public void cancelled() {
+                        String status = "failed";
+                    }
+                });
+            } catch (final Exception e) {
+                String status = "failed";
+            }
+        }
     }
 }

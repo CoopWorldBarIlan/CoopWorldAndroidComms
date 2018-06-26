@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -84,25 +85,31 @@ public class MenuScreen implements Screen {
         // send gameData... examples.
         Connection connection = game.getConnection();
         connection.connectToServer();
-
+        connection.getConfig(1);
+        //Game Data
+        /**
         // create gameData object.
         GameData gameData = new GameData();
         gameData.setUser_id("test");
         gameData.setTablet_id("-1");
         // send the object to the server.
         connection.sendGameData(gameData);
-
+        **/
         // Level Data:
+        /**
         LevelData levelData = new LevelData();
         levelData.setUser_id("12342");
         levelData.setTablet_id("-1");
         // send the object to the server.
         connection.sendLevelData(levelData);
-
+        **/
+        //User
+        /**
         User user = new User();
         user.setAge("5");
         user.setApk_version("1.1");
         user.setName("Avi");
         connection.sendUserData(user);
-        }
+        **/
+    }
 }
