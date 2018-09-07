@@ -1,7 +1,7 @@
-10.0.2.2
-1337
-http://10.0.2.2:1337/android/levelLogs
-http://10.0.2.2:1337/android/gameData
-http://10.0.2.2:1337/android/players
-http://10.0.2.2:1337/android/token
-http://10.0.2.2:1337/android/gameConfig
+104.155.79.155
+80
+http://104.155.79.155/android/levelLogs
+http://104.155.79.155/android/gameData
+http://104.155.79.155/android/players
+http://104.155.79.155/android/token
+http://104.155.79.155/android/gameConfig
